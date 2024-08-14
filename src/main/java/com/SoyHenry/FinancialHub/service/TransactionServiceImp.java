@@ -1,6 +1,6 @@
 package com.SoyHenry.FinancialHub.service;
 
-import com.SoyHenry.FinancialHub.model.Transaction;
+import com.SoyHenry.FinancialHub.entities.Transaction;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

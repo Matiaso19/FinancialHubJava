@@ -1,7 +1,6 @@
 package com.SoyHenry.FinancialHub.controller;
 
-import com.SoyHenry.FinancialHub.model.Transaction;
-import com.SoyHenry.FinancialHub.service.TransactionServiceImp;
+import com.SoyHenry.FinancialHub.entities.Transaction;
 import com.SoyHenry.FinancialHub.service.TransactionServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +15,7 @@ import java.util.Optional;
 public class TransactionController {
 
     @Autowired
-    TransactionServiceImp transactionServiceImp;
+    private TransactionServiceImp transactionServiceImp;
 
     @GetMapping
     public List<Transaction> getAllTransactions(){

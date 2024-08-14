@@ -1,9 +1,9 @@
 package com.SoyHenry.FinancialHub.controller;
 
-import com.SoyHenry.FinancialHub.model.Account;
-import com.SoyHenry.FinancialHub.model.Transaction;
+import com.SoyHenry.FinancialHub.dto.AccountDtoRequest;
+import com.SoyHenry.FinancialHub.dto.AccountDtoResponse;
+import com.SoyHenry.FinancialHub.entities.Account;
 import com.SoyHenry.FinancialHub.service.AccountServiceImpl;
-import com.SoyHenry.FinancialHub.service.TransactionServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,38 +17,70 @@ import java.util.Optional;
 public class AccountController {
 
     @Autowired
-    AccountServiceImpl accountService;
+    private AccountServiceImpl accountService;
 
     @GetMapping
-    public List<Account> getAllAccounts(){
-        return accountService.getAll();
+    public ResponseEntity<List<AccountDtoResponse>> getAllAccounts(){
+        try{
+        List<AccountDtoResponse> accounts = accountService.getAll();
+        return new ResponseEntity<>(accounts, HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Account>> getAccountById(@PathVariable Long id){
-        Optional<Account> existingAccount = accountService.getById(id);
-        if(existingAccount.isPresent()){
-            return new ResponseEntity<>(existingAccount, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<AccountDtoResponse> getAccountById(@PathVariable Long id){
+        try{
+            AccountDtoResponse accountDtoResponse = accountService.getById(id);
+            if(accountDtoResponse != null){
+                return new ResponseEntity<>(accountDtoResponse, HttpStatus.OK);
+            } else{
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PostMapping
-    public ResponseEntity<Account> createAccount(@RequestBody Account account){
-        Account createdAccount = accountService.create(account);
-        return new ResponseEntity<>(createdAccount, HttpStatus.CREATED);
+    public ResponseEntity<String> createAccount(@RequestBody AccountDtoRequest accountDtoRequest){
+        try{
+        accountService.create(accountDtoRequest);
+        return new ResponseEntity<>("Cuenta creada exitosamente", HttpStatus.CREATED);
+        } catch (Exception e){
+            return new ResponseEntity<>("HUbo un error al crear la cuenta: "+ e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAccount(@PathVariable Long id){
-        Optional<Account> existingAccount = accountService.getById(id);
-        if(existingAccount.isPresent()){
-            accountService.delete(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<String> deleteAccount(@PathVariable Long id){
+        try {
+            AccountDtoResponse eliminateAccount = accountService.getById(id);
+            if(eliminateAccount != null) {
+                accountService.delete(id);
+                return new ResponseEntity<>("Cuenta con id: " + id + " eliminado correctamente", HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>("No se encontro la cuenta con id: " + id, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al eliminar la cuenta con id: " + id + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateAccount(@PathVariable Long id, @RequestBody AccountDtoRequest accountDtoRequest){
+        try {
+            AccountDtoResponse updatedAccount = accountService.getById(id);
+            if(updatedAccount != null) {
+                accountService.update(id, accountDtoRequest);
+                return new ResponseEntity<>("Cuenta modificada correctamente", HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>("No se encontro la cuenta con el id: " + id, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>("Hubo un error al modificar la cuenta " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 }

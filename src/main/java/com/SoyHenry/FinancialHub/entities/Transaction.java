@@ -1,7 +1,10 @@
-package com.SoyHenry.FinancialHub.model;
+package com.SoyHenry.FinancialHub.entities;
+
+import lombok.Data;
 
 import java.util.Date;
 
+@Data
 public class Transaction {
 
     private Long id;
@@ -20,37 +23,6 @@ public class Transaction {
         this.date = new Date();
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Double amount) {
-        this.amount = amount;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
 
     public void transactionSummary(){
         System.out.println("Id: " + getId());
