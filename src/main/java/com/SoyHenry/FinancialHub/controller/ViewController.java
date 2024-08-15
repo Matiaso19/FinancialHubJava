@@ -1,6 +1,6 @@
 //package com.SoyHenry.FinancialHub.controller;
 //
-//import com.SoyHenry.FinancialHub.dto.AccountDtoResponse;
+//import com.SoyHenry.FinancialHub.dto.account.AccountDtoResponse;
 //import com.SoyHenry.FinancialHub.entities.Account;
 //import com.SoyHenry.FinancialHub.service.ViewServiceImpl;
 //import org.springframework.beans.factory.annotation.Autowired;

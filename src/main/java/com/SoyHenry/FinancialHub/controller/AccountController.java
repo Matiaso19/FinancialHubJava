@@ -1,16 +1,14 @@
 package com.SoyHenry.FinancialHub.controller;
 
-import com.SoyHenry.FinancialHub.dto.AccountDtoRequest;
-import com.SoyHenry.FinancialHub.dto.AccountDtoResponse;
-import com.SoyHenry.FinancialHub.entities.Account;
-import com.SoyHenry.FinancialHub.service.AccountServiceImpl;
+import com.SoyHenry.FinancialHub.dto.account.AccountDtoRequest;
+import com.SoyHenry.FinancialHub.dto.account.AccountDtoResponse;
+import com.SoyHenry.FinancialHub.service.impl.AccountServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/accounts")

@@ -1,27 +1,25 @@
 package com.SoyHenry.FinancialHub.entities;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
+@Entity
 public class Transaction {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String type;
     private Double amount;
-    private Date date;
+    private LocalDate date;
 
-    public Transaction() {
-        this.date = new Date();
-    }
 
-    public Transaction(Long id, String type, Double amount) {
-        this.id = id;
-        this.type = type;
-        this.amount = amount;
-        this.date = new Date();
-    }
 
 
     public void transactionSummary(){

@@ -1,10 +1,11 @@
-package com.SoyHenry.FinancialHub.service;
+package com.SoyHenry.FinancialHub.service.impl;
 
-import com.SoyHenry.FinancialHub.dto.AccountDtoRequest;
-import com.SoyHenry.FinancialHub.dto.AccountDtoResponse;
+import com.SoyHenry.FinancialHub.dto.account.AccountDtoRequest;
+import com.SoyHenry.FinancialHub.dto.account.AccountDtoResponse;
 import com.SoyHenry.FinancialHub.entities.Account;
 import com.SoyHenry.FinancialHub.mapper.AccountMapper;
 import com.SoyHenry.FinancialHub.repository.AccountRepository;
+import com.SoyHenry.FinancialHub.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

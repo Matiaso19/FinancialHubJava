@@ -1,9 +1,8 @@
-package com.SoyHenry.FinancialHub.dto;
+package com.SoyHenry.FinancialHub.dto.account;
 
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Data
 public class AccountDtoRequest {

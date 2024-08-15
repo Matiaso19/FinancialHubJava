@@ -1,13 +1,11 @@
 package com.SoyHenry.FinancialHub.service;
 
-import com.SoyHenry.FinancialHub.dto.AccountDtoRequest;
-import com.SoyHenry.FinancialHub.dto.AccountDtoResponse;
-import com.SoyHenry.FinancialHub.entities.Account;
+import com.SoyHenry.FinancialHub.dto.account.AccountDtoRequest;
+import com.SoyHenry.FinancialHub.dto.account.AccountDtoResponse;
 import org.springframework.stereotype.Service;
 
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public interface AccountService {

@@ -1,7 +1,7 @@
 package com.SoyHenry.FinancialHub.mapper;
 
-import com.SoyHenry.FinancialHub.dto.AccountDtoRequest;
-import com.SoyHenry.FinancialHub.dto.AccountDtoResponse;
+import com.SoyHenry.FinancialHub.dto.account.AccountDtoRequest;
+import com.SoyHenry.FinancialHub.dto.account.AccountDtoResponse;
 import com.SoyHenry.FinancialHub.entities.Account;
 import org.mapstruct.Mapper;
 
