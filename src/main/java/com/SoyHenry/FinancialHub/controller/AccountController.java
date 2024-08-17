@@ -3,6 +3,7 @@ package com.SoyHenry.FinancialHub.controller;
 import com.SoyHenry.FinancialHub.dto.account.AccountDtoRequest;
 import com.SoyHenry.FinancialHub.dto.account.AccountDtoResponse;
 import com.SoyHenry.FinancialHub.service.impl.AccountServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +43,7 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createAccount(@RequestBody AccountDtoRequest accountDtoRequest){
+    public ResponseEntity<String> createAccount(@RequestBody @Valid AccountDtoRequest accountDtoRequest){
         try{
         accountService.create(accountDtoRequest);
         return new ResponseEntity<>("Cuenta creada exitosamente", HttpStatus.CREATED);

@@ -4,6 +4,7 @@ package com.SoyHenry.FinancialHub.controller;
 import com.SoyHenry.FinancialHub.dto.transaction.TransactionDtoRequest;
 import com.SoyHenry.FinancialHub.dto.transaction.TransactionDtoResponse;
 import com.SoyHenry.FinancialHub.service.TransactionService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,7 +49,7 @@ public class TransactionController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createTransaction(@RequestBody TransactionDtoRequest transactionDtoRequest){
+    public ResponseEntity<String> createTransaction(@RequestBody @Valid TransactionDtoRequest transactionDtoRequest){
         try{
             transactionService.create(transactionDtoRequest);
             return new ResponseEntity<>("Transaccion creada exitosamente", HttpStatus.CREATED);
