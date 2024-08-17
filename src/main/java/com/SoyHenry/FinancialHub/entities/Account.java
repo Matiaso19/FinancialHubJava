@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Data
@@ -22,6 +23,8 @@ public class Account {
     @Column(name = "opening_date")
     private LocalDate openingDate;
 
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Transaction> transactions;
 
 
     public void deposit(double amount){
