@@ -14,12 +14,12 @@ public class FinancialHubApplication {
 		SpringApplication.run(FinancialHubApplication.class, args);
 
 		//Instancia de Transaction
-		Transaction transaction = new Transaction();
-		transaction.setAmount(350.00);
-		transaction.setId(1L);
-		transaction.setType("Credit");
-
-		transaction.transactionSummary();
+//		Transaction transaction = new Transaction();
+//		transaction.setAmount(350.00);
+//		transaction.setId(1L);
+//		transaction.setType("Credit");
+//
+//		transaction.transactionSummary();
 
 		// Instancia de Account
 		//Account account = new Account(1L, "Cosme Fulanito", 29000.00, new Date());
