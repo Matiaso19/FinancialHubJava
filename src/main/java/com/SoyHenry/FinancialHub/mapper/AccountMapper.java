@@ -10,7 +10,6 @@ public interface AccountMapper{
 
 AccountDtoRequest mapToDtoRequest(Account account);
 AccountDtoResponse mapToDtoResponse(Account account);
-
 Account mapToAccount(AccountDtoRequest accountDtoRequest);
 
 }

@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -114,6 +115,108 @@ class AccountServiceImplTest {
         assertEquals(dto1, result.get(0));
         assertEquals(dto2, result.get(1));
     }
+
+    @Test
+    @DisplayName("Caso de exito para eliminacion de account")
+    void deleteAccountyByIdTest(){
+        //given
+        Long id = 1L;
+        //when
+        accountService.delete(id);
+        //then
+        verify(accountRepository, times(1)).deleteById(id);
+
+        when(accountRepository.findById(id)).thenReturn(Optional.empty());
+        Optional<Account> deletedAccount = accountRepository.findById(id);
+        assertTrue(deletedAccount.isEmpty(), "La cuenta deberia estar eliminada");
+    }
+
+    @Test
+    @DisplayName("Caso de exito para hacer update de un account")
+    void updateAccountByIdTest(){
+        //given
+        Long id = 1L;
+
+        Account accountMock = new Account();
+        accountMock.setId(id);
+        accountMock.setAccountHolderName("Matias");
+        accountMock.setOpeningDate(LocalDate.of(2022,1,1));
+        accountMock.setBalance(1500.00);
+
+        AccountDtoRequest accountDtoRequestMock =new AccountDtoRequest();
+        accountDtoRequestMock.setBalance(2000.00);
+        accountDtoRequestMock.setAccountHolderName("Juan");
+        accountDtoRequestMock.setOpeningDate(LocalDate.of(2023, 1,1));
+
+        when(accountRepository.findById(id)).thenReturn(Optional.of(accountMock));
+
+        //when
+        accountService.update(id, accountDtoRequestMock);
+
+        //then
+        ArgumentCaptor<Account> accountArgumentCaptor = ArgumentCaptor.forClass(Account.class);
+        verify(accountRepository, times(1)).save(accountArgumentCaptor.capture());
+
+        Account updatedAccount = accountArgumentCaptor.getValue();
+        assertEquals("Juan", updatedAccount.getAccountHolderName());
+        assertEquals(2000.00, updatedAccount.getBalance());
+        assertEquals(LocalDate.of(2023, 1, 1), updatedAccount.getOpeningDate());
+
+        verify(accountRepository, times(1)).findById(id);
+    }
+
+    @Test
+    @DisplayName("Caso de exito para encontrar una cuenta by id")
+    void FindAccountByIdTestFound(){
+
+        //given
+        Long id = 1L;
+
+        Account accountMock = new Account();
+        accountMock.setBalance(1500.00);
+        accountMock.setAccountHolderName("Matias");
+        accountMock.setOpeningDate(LocalDate.of(2023,1,1));
+        accountMock.setId(id);
+
+        AccountDtoResponse accountDtoResponseMock = new AccountDtoResponse();
+        accountDtoResponseMock.setAccountHolderName("Matias");
+        accountDtoResponseMock.setOpeningDate(LocalDate.of(2023,1,1));
+        accountDtoResponseMock.setBalance(1500.00);
+
+        when(accountRepository.findById(id)).thenReturn(Optional.of(accountMock));
+        when(accountMapper.mapToDtoResponse(accountMock)).thenReturn(accountDtoResponseMock);
+
+        //when
+        AccountDtoResponse result = accountService.getById(id);
+
+        //then
+        assertNotNull(result);
+
+        verify(accountRepository, times(1)).findById(id);
+        verify(accountMapper, times(1)).mapToDtoResponse(accountMock);
+
+    }
+
+    @Test
+    @DisplayName("Caso de fallo al encontrar una cuenta by id")
+    void FindAccountByIdTestFail(){
+
+        //given
+        Long id = 1L;
+
+        when(accountRepository.findById(id)).thenReturn(Optional.empty());
+
+        //when
+        AccountDtoResponse result = accountService.getById(id);
+
+        //then
+        assertNull(result);
+
+        verify(accountRepository, times(1)).findById(id);
+        verify(accountMapper, times(0)).mapToDtoResponse(any(Account.class));
+
+    }
+
 }
 
 

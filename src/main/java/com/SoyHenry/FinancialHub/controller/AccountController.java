@@ -2,6 +2,7 @@ package com.SoyHenry.FinancialHub.controller;
 
 import com.SoyHenry.FinancialHub.dto.account.AccountDtoRequest;
 import com.SoyHenry.FinancialHub.dto.account.AccountDtoResponse;
+import com.SoyHenry.FinancialHub.service.AccountService;
 import com.SoyHenry.FinancialHub.service.impl.AccountServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import java.util.List;
 public class AccountController {
 
     @Autowired
-    private AccountServiceImpl accountService;
+    private AccountService accountService;
 
     @GetMapping
     public ResponseEntity<List<AccountDtoResponse>> getAllAccounts(){

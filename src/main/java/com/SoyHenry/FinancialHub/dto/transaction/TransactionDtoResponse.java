@@ -1,5 +1,6 @@
 package com.SoyHenry.FinancialHub.dto.transaction;
 
+import com.SoyHenry.FinancialHub.entities.Account;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -9,5 +10,5 @@ public class TransactionDtoResponse {
     private String type;
     private Double amount;
     private LocalDate date;
-    private Long accountId; // Referencia a la cuenta asociada
+    private Account account;
 }

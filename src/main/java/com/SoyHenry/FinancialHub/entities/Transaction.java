@@ -1,5 +1,6 @@
 package com.SoyHenry.FinancialHub.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,6 +19,7 @@ public class Transaction {
 
     @ManyToOne
     @JoinColumn(name = "account_id")
+    @JsonIgnore
     private Account account;
 
 
