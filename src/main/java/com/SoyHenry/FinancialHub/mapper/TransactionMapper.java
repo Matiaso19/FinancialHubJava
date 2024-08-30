@@ -10,7 +10,9 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface TransactionMapper {
+
     TransactionDtoRequest mapToDtoRequest(Transaction transaction);
     TransactionDtoResponse mapToDtoResponse(Transaction transaction);
+
     Transaction mapToTransaction(TransactionDtoRequest transactionDtoRequest);
 }

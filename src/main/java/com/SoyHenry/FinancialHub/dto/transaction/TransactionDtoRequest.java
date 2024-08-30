@@ -1,5 +1,6 @@
 package com.SoyHenry.FinancialHub.dto.transaction;
 
+
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
@@ -9,9 +10,10 @@ import java.time.LocalDate;
 public class TransactionDtoRequest {
 
     @NotBlank(message = "El tipo de transaccion no puede estar vacio")
+    @Pattern(regexp = "CREDIT|DEBIT", message = "El campo tipo solo admite los valores CREDIT o DEBIT")
     private String type;
 
-    @Min(value = 0, message = "EL monto debe ser mayor o igual a 0")
+    @Min(value = 0, message = "El monto debe ser mayor que 0")
     @NotNull(message = "El monto no puede ser nulo")
     private Double amount;
 

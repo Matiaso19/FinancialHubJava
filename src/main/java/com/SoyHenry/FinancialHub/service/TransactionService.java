@@ -14,7 +14,7 @@ public interface TransactionService {
     List<TransactionDtoResponse> getAll();
     TransactionDtoResponse getById(Long id);
     void create(TransactionDtoRequest transactionDtoRequest);
-    void delete(Long id);
-    void update(Long id, TransactionDtoRequest transactionDtoRequest);
-
+//    void delete(Long id);
+//    void update(Long id, TransactionDtoRequest transactionDtoRequest);
+    void transferFunds(TransactionDtoRequest sourceAccountTransaction, Long targetAccountId);
 }

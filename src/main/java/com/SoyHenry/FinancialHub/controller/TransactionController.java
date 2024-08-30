@@ -3,6 +3,7 @@ package com.SoyHenry.FinancialHub.controller;
 
 import com.SoyHenry.FinancialHub.dto.transaction.TransactionDtoRequest;
 import com.SoyHenry.FinancialHub.dto.transaction.TransactionDtoResponse;
+import com.SoyHenry.FinancialHub.dto.transfer.TransferRequestDto;
 import com.SoyHenry.FinancialHub.service.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,32 +59,45 @@ public class TransactionController {
         }
 
     }
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteTransaction(@PathVariable Long id){
-        try {
-            TransactionDtoResponse existingTransaction = transactionService.getById(id);
-            if(existingTransaction != null){
-                transactionService.delete(id);
-                return new ResponseEntity<>("Transaccion eliminada correctamente", HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("No se encontro la transaccion con el id: " + id, HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception e){
-            return new ResponseEntity<>("Hubo un error al eliminar la transaccion con id: "+ id, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-    @PutMapping("/{id}")
-    public ResponseEntity<String> updateTransaction(@PathVariable Long id, @RequestBody TransactionDtoRequest transactionDtoRequest){
+    @PostMapping("/transfer")
+    public ResponseEntity<String> transferFunds(@RequestBody @Valid TransferRequestDto transferRequestDto){
         try{
-            TransactionDtoResponse updatedTransaction = transactionService.getById(id);
-            if(updatedTransaction != null){
-                transactionService.update(id, transactionDtoRequest);
-                return new ResponseEntity<>("Transaccion modificada correctamente", HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("No se encontro la transaccion con id: " + id, HttpStatus.NOT_FOUND);
-            }
+            transactionService.transferFunds(transferRequestDto.getSourceTransactionDto(), transferRequestDto.getTargetAccountId());
+            return new ResponseEntity<>("Transferencia realizada exitosamente", HttpStatus.OK);
         } catch (Exception e){
-            return new ResponseEntity<>("Hubo un error al modificar la transaccion", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Hubo un error al realizar la transferencia: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+
+
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<String> deleteTransaction(@PathVariable Long id){
+//        try {
+//            TransactionDtoResponse existingTransaction = transactionService.getById(id);
+//            if(existingTransaction != null){
+//                transactionService.delete(id);
+//                return new ResponseEntity<>("Transaccion eliminada correctamente", HttpStatus.OK);
+//            } else {
+//                return new ResponseEntity<>("No se encontro la transaccion con el id: " + id, HttpStatus.NOT_FOUND);
+//            }
+//        } catch (Exception e){
+//            return new ResponseEntity<>("Hubo un error al eliminar la transaccion con id: "+ id, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
+//    @PutMapping("/{id}")
+//    public ResponseEntity<String> updateTransaction(@PathVariable Long id, @RequestBody TransactionDtoRequest transactionDtoRequest){
+//        try{
+//            TransactionDtoResponse updatedTransaction = transactionService.getById(id);
+//            if(updatedTransaction != null){
+//                transactionService.update(id, transactionDtoRequest);
+//                return new ResponseEntity<>("Transaccion modificada correctamente", HttpStatus.OK);
+//            } else {
+//                return new ResponseEntity<>("No se encontro la transaccion con id: " + id, HttpStatus.NOT_FOUND);
+//            }
+//        } catch (Exception e){
+//            return new ResponseEntity<>("Hubo un error al modificar la transaccion", HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 }
