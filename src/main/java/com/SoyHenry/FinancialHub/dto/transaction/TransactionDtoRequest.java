@@ -21,6 +21,6 @@ public class TransactionDtoRequest {
     @PastOrPresent(message = "La fecha debe ser pasada o presente")
     private LocalDate date;
 
-    @NotNull(message = "The accountId cannot be null.")
+    @NotNull(message = "El account Id no puede ser nulo")
     private Long accountId;
 }

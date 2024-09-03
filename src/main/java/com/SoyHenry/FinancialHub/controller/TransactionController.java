@@ -3,12 +3,14 @@ package com.SoyHenry.FinancialHub.controller;
 
 import com.SoyHenry.FinancialHub.dto.transaction.TransactionDtoRequest;
 import com.SoyHenry.FinancialHub.dto.transaction.TransactionDtoResponse;
+import com.SoyHenry.FinancialHub.dto.transaction.TransactionFindByFilterDto;
 import com.SoyHenry.FinancialHub.dto.transfer.TransferRequestDto;
 import com.SoyHenry.FinancialHub.service.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/transactions")
+@Validated
 public class TransactionController {
 
     private final TransactionService transactionService;
@@ -66,6 +69,16 @@ public class TransactionController {
             return new ResponseEntity<>("Transferencia realizada exitosamente", HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntity<>("Hubo un error al realizar la transferencia: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<TransactionDtoResponse>> getTransactionByFilters(@Valid TransactionFindByFilterDto filterDto){
+        try{
+            List<TransactionDtoResponse> transactions = transactionService.findByFilters(filterDto);
+            return new ResponseEntity<>(transactions, HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

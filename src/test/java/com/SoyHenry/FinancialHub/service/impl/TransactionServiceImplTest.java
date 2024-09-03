@@ -2,6 +2,7 @@ package com.SoyHenry.FinancialHub.service.impl;
 
 import com.SoyHenry.FinancialHub.dto.transaction.TransactionDtoRequest;
 import com.SoyHenry.FinancialHub.dto.transaction.TransactionDtoResponse;
+import com.SoyHenry.FinancialHub.dto.transaction.TransactionFindByFilterDto;
 import com.SoyHenry.FinancialHub.entities.Account;
 import com.SoyHenry.FinancialHub.entities.Transaction;
 import com.SoyHenry.FinancialHub.mapper.TransactionMapper;
@@ -136,6 +137,38 @@ class TransactionServiceImplTest {
         verify(accountRepository, times(2)).save(any(Account.class));
 
 
+
+    }
+
+    @Test
+    @DisplayName("Test caso de exito para encontrar transacciones segun filtros aplicados")
+    void findByFiltersTest(){
+        //given
+        Long accountId = 1L;
+        String type = "CREDIT";
+        LocalDate startDate = LocalDate.of(2023, 1, 1);
+        LocalDate endDate = LocalDate.of(2023, 12, 31);
+
+        TransactionFindByFilterDto filterDto = new TransactionFindByFilterDto();
+        filterDto.setAccountId(accountId);
+        filterDto.setType(type);
+        filterDto.setStartDate(startDate);
+        filterDto.setEndDate(endDate);
+
+        List<Transaction> transactions = List.of(new Transaction(), new Transaction());
+        when(transactionRepository.findByFilters(accountId, type, startDate, endDate))
+                .thenReturn(transactions);
+        when(transactionMapper.mapToDtoResponse(any(Transaction.class)))
+                .thenReturn(new TransactionDtoResponse());
+
+        //when
+        List<TransactionDtoResponse> result = transactionService.findByFilters(filterDto);
+
+        //then
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        verify(transactionRepository, times(1)).findByFilters(accountId, type, startDate, endDate);
+        verify(transactionMapper, times(2)).mapToDtoResponse(any(Transaction.class));
 
     }
 }

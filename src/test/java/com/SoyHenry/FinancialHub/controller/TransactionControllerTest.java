@@ -2,6 +2,7 @@ package com.SoyHenry.FinancialHub.controller;
 
 import com.SoyHenry.FinancialHub.dto.transaction.TransactionDtoRequest;
 import com.SoyHenry.FinancialHub.dto.transaction.TransactionDtoResponse;
+import com.SoyHenry.FinancialHub.dto.transaction.TransactionFindByFilterDto;
 import com.SoyHenry.FinancialHub.dto.transfer.TransferRequestDto;
 import com.SoyHenry.FinancialHub.entities.Account;
 import com.SoyHenry.FinancialHub.entities.Transaction;
@@ -148,6 +149,36 @@ class TransactionControllerTest {
                 .content(objectMapper.writeValueAsString(transferRequestDto)))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string("Transferencia realizada exitosamente"));
+
+    }
+    @Test
+    @DisplayName("Test Integracion Find Transaction By Filters")
+    void getTransactionByFiltersIntegrationTest() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+
+        //given
+        Account account = new Account(1L, "Matias", 100.00, LocalDate.now(), null);
+        TransactionDtoResponse transaction1 = new TransactionDtoResponse("DEBIT", 50.00, LocalDate.now(), account);
+        TransactionDtoResponse transaction2 = new TransactionDtoResponse("CREDIT", 150.00, LocalDate.now(), account);
+
+        List<TransactionDtoResponse> transactions = List.of(transaction1, transaction2);
+
+        TransactionFindByFilterDto filterDto = new TransactionFindByFilterDto();
+        filterDto.setAccountId(1L);
+        filterDto.setStartDate(LocalDate.now().minusDays(10));
+        filterDto.setEndDate(LocalDate.now());
+
+        given(transactionService.findByFilters(any(TransactionFindByFilterDto.class))).willReturn(transactions);
+
+        //when -then
+        mockMvc.perform(get("/api/v1/transactions/filter")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(filterDto)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].type", is("DEBIT")))
+                .andExpect(jsonPath("$[1].type", is("CREDIT")));
 
     }
 }

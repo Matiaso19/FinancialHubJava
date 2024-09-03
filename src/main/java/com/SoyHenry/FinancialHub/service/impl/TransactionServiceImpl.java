@@ -3,6 +3,7 @@ package com.SoyHenry.FinancialHub.service.impl;
 import com.SoyHenry.FinancialHub.dto.account.AccountDtoResponse;
 import com.SoyHenry.FinancialHub.dto.transaction.TransactionDtoRequest;
 import com.SoyHenry.FinancialHub.dto.transaction.TransactionDtoResponse;
+import com.SoyHenry.FinancialHub.dto.transaction.TransactionFindByFilterDto;
 import com.SoyHenry.FinancialHub.entities.Account;
 import com.SoyHenry.FinancialHub.entities.Transaction;
 import com.SoyHenry.FinancialHub.mapper.TransactionMapper;
@@ -66,9 +67,9 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setAccount(account);
 
 
-        if ("CREDIT".equalsIgnoreCase(dto.getType())) {
+        if ("CREDIT".equals(dto.getType())) {
             account.setBalance(account.getBalance() + dto.getAmount());
-        } else if ("DEBIT".equalsIgnoreCase(dto.getType())) {
+        } else if ("DEBIT".equals(dto.getType())) {
             if(account.getBalance() >= transaction.getAmount()){
             account.setBalance(account.getBalance() - dto.getAmount());
             } else {
@@ -114,6 +115,17 @@ public class TransactionServiceImpl implements TransactionService {
         create(targetTransactionDto);
 
 }
+
+    @Override
+    public List<TransactionDtoResponse> findByFilters(TransactionFindByFilterDto transactionFindByFilterDto) {
+        List<Transaction> transactions = transactionRepository.findByFilters(
+                transactionFindByFilterDto.getAccountId(),
+                transactionFindByFilterDto.getType(),
+                transactionFindByFilterDto.getStartDate(),
+                transactionFindByFilterDto.getEndDate()
+        );
+        return mapToDtoList(transactions);
+    }
 
 //    @Override
 //    public void delete(Long id) {
