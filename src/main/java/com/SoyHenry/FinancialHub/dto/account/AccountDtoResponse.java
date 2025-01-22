@@ -1,6 +1,7 @@
 package com.SoyHenry.FinancialHub.dto.account;
 
 import com.SoyHenry.FinancialHub.entities.Transaction;
+import com.SoyHenry.FinancialHub.entities.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,4 +19,5 @@ public class AccountDtoResponse {
     private LocalDate openingDate;
     private List<Transaction> transactions;
 
+    private UserEntity user;
 }

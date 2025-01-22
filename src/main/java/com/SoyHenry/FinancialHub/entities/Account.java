@@ -1,5 +1,7 @@
 package com.SoyHenry.FinancialHub.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,6 +30,10 @@ public class Account {
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Transaction> transactions;
 
+    @JsonIgnore
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private UserEntity user;
 
     public void deposit(double amount){
         balance += amount;
@@ -39,10 +45,12 @@ public class Account {
             System.out.println("No puedes realizar esta operacion porque el monto que intentas retirar es mayor que tu saldo disponible");
         }
     }
+
     public void printSummary(){
         System.out.println("Id: " + getId());
         System.out.println("Account Holder: " + getAccountHolderName());
         System.out.println("Opening Date: " + getOpeningDate());
         System.out.println("Balance: " + getBalance());
     }
+
 }

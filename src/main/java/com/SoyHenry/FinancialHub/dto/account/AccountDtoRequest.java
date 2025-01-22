@@ -25,4 +25,6 @@ public class AccountDtoRequest {
     @PastOrPresent(message = "La fecha de apertura debe ser pasada o presente")
     private LocalDate openingDate;
 
+    private Long userId;
+
 }

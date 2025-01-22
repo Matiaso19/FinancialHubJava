@@ -2,9 +2,12 @@ package com.SoyHenry.FinancialHub.service.impl;
 
 import com.SoyHenry.FinancialHub.dto.account.AccountDtoRequest;
 import com.SoyHenry.FinancialHub.dto.account.AccountDtoResponse;
+import com.SoyHenry.FinancialHub.dto.user.UserEntityDtoResponse;
 import com.SoyHenry.FinancialHub.entities.Account;
+import com.SoyHenry.FinancialHub.entities.UserEntity;
 import com.SoyHenry.FinancialHub.mapper.AccountMapper;
 import com.SoyHenry.FinancialHub.repository.AccountRepository;
+import com.SoyHenry.FinancialHub.repository.UserRepository;
 import com.SoyHenry.FinancialHub.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,11 +21,13 @@ public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
+    private final UserRepository userRepository;
 
     @Autowired
-    public AccountServiceImpl(AccountRepository accountRepository, AccountMapper accountMapper) {
+    public AccountServiceImpl(AccountRepository accountRepository, AccountMapper accountMapper, UserRepository userRepository) {
         this.accountRepository = accountRepository;
         this.accountMapper = accountMapper;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -40,7 +45,17 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void create(AccountDtoRequest accountDtoRequest) {
+        //search user by id
+        UserEntity user = userRepository.findById(accountDtoRequest.getUserId())
+                .orElseThrow(()-> new RuntimeException("Usuario con Id: " + accountDtoRequest.getUserId() + " no encontrado"));
+
+        System.out.println(user);
+
         Account account = accountMapper.mapToAccount(accountDtoRequest);
+
+        account.setUser(user);
+        user.setAccount(account);
+
         accountRepository.save(account);
     }
 
