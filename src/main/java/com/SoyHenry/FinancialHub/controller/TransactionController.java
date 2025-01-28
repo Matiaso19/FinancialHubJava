@@ -56,6 +56,7 @@ public class TransactionController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<String> createTransaction(@RequestBody @Valid TransactionDtoRequest transactionDtoRequest){
         try{
             transactionService.create(transactionDtoRequest);
@@ -66,6 +67,7 @@ public class TransactionController {
 
     }
     @PostMapping("/transfer")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<String> transferFunds(@RequestBody @Valid TransferRequestDto transferRequestDto){
         try{
             transactionService.transferFunds(transferRequestDto.getSourceTransactionDto(), transferRequestDto.getTargetAccountId());
@@ -76,6 +78,7 @@ public class TransactionController {
     }
 
     @GetMapping("/filter")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or @userEntityServiceImpl.isUserTransaction(#id, principal)")
     public ResponseEntity<List<TransactionDtoResponse>> getTransactionByFilters(@Valid TransactionFindByFilterDto filterDto){
         try{
             List<TransactionDtoResponse> transactions = transactionService.findByFilters(filterDto);
