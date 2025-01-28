@@ -10,6 +10,7 @@ import com.SoyHenry.FinancialHub.repository.AccountRepository;
 import com.SoyHenry.FinancialHub.repository.UserRepository;
 import com.SoyHenry.FinancialHub.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -77,6 +78,7 @@ public class AccountServiceImpl implements AccountService {
             accountRepository.save(account);
         }
     }
+
 
     private List<AccountDtoResponse> mapToDtoList(List<Account> accounts){
         return accounts.stream()

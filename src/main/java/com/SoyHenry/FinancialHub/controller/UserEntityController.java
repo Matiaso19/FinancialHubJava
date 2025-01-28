@@ -3,11 +3,13 @@ package com.SoyHenry.FinancialHub.controller;
 import com.SoyHenry.FinancialHub.dto.user.UserEntityDtoRequest;
 import com.SoyHenry.FinancialHub.dto.user.UserEntityDtoResponse;
 import com.SoyHenry.FinancialHub.service.UserEntityService;
+import com.SoyHenry.FinancialHub.service.impl.UserEntityServiceImpl;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +23,7 @@ public class UserEntityController {
     private final UserEntityService userEntityService;
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserEntityDtoResponse>> getAllUsers(){
         try{
             List<UserEntityDtoResponse> users = userEntityService.getAllUsers();
@@ -45,9 +48,11 @@ public class UserEntityController {
 
     }
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @userEntityServiceImpl.isUser(#id, principal)")
     public ResponseEntity<UserEntityDtoResponse> getUserById(@PathVariable Long id){
         try{
             UserEntityDtoResponse user = userEntityService.getUserById(id);
+            System.out.println(user.toString() + "este es el user");
             if (user != null){
                 return new ResponseEntity<>(user, HttpStatus.OK);
             } else {
@@ -60,6 +65,7 @@ public class UserEntityController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteUser(@PathVariable Long id){
         try {
             UserEntityDtoResponse eliminateUser = userEntityService.getUserById(id);
@@ -74,7 +80,9 @@ public class UserEntityController {
         }
     }
 
+
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN') or @userEntityServiceImpl.isUser(#id, principal)")
     public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody @Valid UserEntityDtoRequest userEntityDtoRequest){
         try {
             UserEntityDtoResponse updateUser = userEntityService.getUserById(id);
@@ -91,6 +99,7 @@ public class UserEntityController {
     }
 
     @GetMapping("/find/username/{username}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserEntityDtoResponse> findUserByUserName(@PathVariable String username) {
         try {
             Optional<UserEntityDtoResponse> user = userEntityService.findByUsername(username);
@@ -104,6 +113,7 @@ public class UserEntityController {
     }
 
     @GetMapping("/find/email/{email}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserEntityDtoResponse> getUserByEmail(@PathVariable @Email String email){
         try {
             Optional<UserEntityDtoResponse> user = userEntityService.findByEmail(email);
@@ -115,6 +125,7 @@ public class UserEntityController {
     }
 
     @GetMapping("/find/document/{document}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserEntityDtoResponse> getUserByDocument(@PathVariable String document){
         try {
             Optional<UserEntityDtoResponse> user = userEntityService.findByDocumentId(document);

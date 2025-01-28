@@ -28,9 +28,15 @@ public class RoleEntityServiceImpl implements RoleEntityService {
     @Override
     public void createRole(RoleDtoRequest roleDtoRequest) {
 
-        RoleEntity roleEntity = new RoleEntity();
-        roleEntity.setRole(roleDtoRequest.getRoleEnum());
-        roleRepository.save(roleEntity);
+        Optional<RoleEntity> existingRole = roleRepository.findByRole(roleDtoRequest.getRoleEnum());
+        if(existingRole.isEmpty()){
+            RoleEntity roleEntity = new RoleEntity();
+            roleEntity.setRole(roleDtoRequest.getRoleEnum());
+            roleRepository.save(roleEntity);
+        } else {
+            throw new RuntimeException("El Rol " + roleDtoRequest.getRoleEnum() + " ya existe y no se puede duplicar");
+        }
+
 
     }
 

@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class AccountController {
     private AccountService accountService;
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public ResponseEntity<List<AccountDtoResponse>> getAllAccounts(){
         try{
         List<AccountDtoResponse> accounts = accountService.getAll();
@@ -30,6 +32,7 @@ public class AccountController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or @userEntityServiceImpl.isUserAccount(#id, principal)")
     public ResponseEntity<AccountDtoResponse> getAccountById(@PathVariable Long id){
         try{
             AccountDtoResponse accountDtoResponse = accountService.getById(id);
@@ -44,6 +47,7 @@ public class AccountController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<String> createAccount(@RequestBody @Valid AccountDtoRequest accountDtoRequest){
         try{
         accountService.create(accountDtoRequest);
@@ -54,6 +58,7 @@ public class AccountController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public ResponseEntity<String> deleteAccount(@PathVariable Long id){
         try {
             AccountDtoResponse eliminateAccount = accountService.getById(id);
@@ -68,6 +73,7 @@ public class AccountController {
         }
     }
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public ResponseEntity<String> updateAccount(@PathVariable Long id, @RequestBody AccountDtoRequest accountDtoRequest){
         try {
             AccountDtoResponse updatedAccount = accountService.getById(id);

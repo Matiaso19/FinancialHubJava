@@ -3,14 +3,15 @@ package com.SoyHenry.FinancialHub.service.impl;
 import com.SoyHenry.FinancialHub.dto.role.RoleDtoResponse;
 import com.SoyHenry.FinancialHub.dto.user.UserEntityDtoRequest;
 import com.SoyHenry.FinancialHub.dto.user.UserEntityDtoResponse;
-import com.SoyHenry.FinancialHub.entities.RoleEntity;
-import com.SoyHenry.FinancialHub.entities.RoleEnum;
-import com.SoyHenry.FinancialHub.entities.UserEntity;
+import com.SoyHenry.FinancialHub.entities.*;
 import com.SoyHenry.FinancialHub.mapper.UserEntityMapper;
 import com.SoyHenry.FinancialHub.repository.RoleRepository;
+import com.SoyHenry.FinancialHub.repository.TransactionRepository;
 import com.SoyHenry.FinancialHub.repository.UserRepository;
 import com.SoyHenry.FinancialHub.service.UserEntityService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,7 @@ public class UserEntityServiceImpl implements UserEntityService {
     private final RoleRepository roleRepository;
     private final UserEntityMapper userEntityMapper;
     private final PasswordEncoder passwordEncoder;
+    private final TransactionRepository transactionRepository;
 
 
     @Override
@@ -145,6 +147,34 @@ public class UserEntityServiceImpl implements UserEntityService {
 
         Optional<UserEntity> user = userRepository.findByDocumentId(documentId);
         return user.map(userEntityMapper::mapToDtoResponse);
+    }
+
+    @Override
+    public Boolean isUser(Long userId, UserDetails userDetails) {
+        String username = userDetails.getUsername();
+
+        UserEntity user = userRepository.findByUsername(username)
+                .orElseThrow(()-> new UsernameNotFoundException("Usuario no encontrado"));
+
+        return user.getId().equals(userId);
+    }
+
+    public Boolean isUserAccount(Long accountId, UserDetails userDetails){
+        String username = userDetails.getUsername();
+
+        UserEntity user = userRepository.findByUsername(username).orElseThrow(()-> new UsernameNotFoundException("Usuario no encontrado"));
+
+        return user.getAccount().getId().equals(accountId);
+
+    }
+
+    public Boolean isUserTransaction(Long transactionId, UserDetails userDetails){
+        String username = userDetails.getUsername();
+        UserEntity user = userRepository.findByUsername(username).orElseThrow(()-> new UsernameNotFoundException("Usuario no encontrado"));
+
+        Transaction transaction = transactionRepository.findById(transactionId).orElseThrow(()-> new RuntimeException("Transaccion no encontrada"));
+
+        return user.getAccount().getId().equals(transaction.getAccount().getId());
     }
 
     private List<UserEntityDtoResponse> mapToDtoList(List<UserEntity> users){

@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +30,7 @@ public class TransactionController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public ResponseEntity<List<TransactionDtoResponse>> getAllTransactions(){
         try{
             List<TransactionDtoResponse> transactions = transactionService.getAll();
@@ -39,6 +41,7 @@ public class TransactionController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or @userEntityServiceImpl.isUserTransaction(#id, principal)")
     public ResponseEntity<TransactionDtoResponse> getTransactionById(@PathVariable Long id){
         try{
             TransactionDtoResponse existingTransaction = transactionService.getById(id);
