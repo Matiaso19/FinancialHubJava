@@ -88,6 +88,17 @@ public class TransactionController {
         }
     }
 
+    @GetMapping("/user/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or @userEntityServiceImpl.isUserTransaction(#id, principal)")
+    public ResponseEntity<List<TransactionDtoResponse>>getTransactionsByUser(@PathVariable Long id){
+        try {
+            List<TransactionDtoResponse> transactions = transactionService.getTransactionsByUserId(id);
+            return new ResponseEntity<>(transactions, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 
 

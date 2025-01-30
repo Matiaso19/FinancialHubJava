@@ -10,6 +10,7 @@ import com.SoyHenry.FinancialHub.mapper.TransactionMapper;
 import com.SoyHenry.FinancialHub.repository.AccountRepository;
 import com.SoyHenry.FinancialHub.repository.TransactionRepository;
 import com.SoyHenry.FinancialHub.service.TransactionService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -125,6 +126,20 @@ public class TransactionServiceImpl implements TransactionService {
                 transactionFindByFilterDto.getEndDate()
         );
         return mapToDtoList(transactions);
+    }
+
+    @Override
+    public List<TransactionDtoResponse> getTransactionsByUserId(Long id) {
+        Account account = accountRepository.findByUserId(id).orElseThrow(() -> new EntityNotFoundException("Cuenta no encontrada para el usuario con id: " + id));
+        return account.getTransactions().stream()
+                .map(transaction -> new TransactionDtoResponse(
+                        transaction.getType(),
+                        transaction.getAmount(),
+                        transaction.getDate()
+
+
+                )).collect(Collectors.toList());
+
     }
 
 //    @Override

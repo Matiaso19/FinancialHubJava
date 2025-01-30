@@ -14,5 +14,5 @@ public class TransactionDtoResponse {
     private String type;
     private Double amount;
     private LocalDate date;
-    private Account account;
+
 }

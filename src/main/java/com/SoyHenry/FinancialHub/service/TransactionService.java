@@ -21,5 +21,5 @@ public interface TransactionService {
 //    void update(Long id, TransactionDtoRequest transactionDtoRequest);
     void transferFunds(TransactionDtoRequest sourceAccountTransaction, Long targetAccountId);
     List<TransactionDtoResponse> findByFilters(TransactionFindByFilterDto transactionFindByFilterDto);
-
+    List<TransactionDtoResponse> getTransactionsByUserId(Long id);
 }
